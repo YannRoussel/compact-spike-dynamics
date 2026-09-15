@@ -82,22 +82,35 @@ class CellOptimizationTests(unittest.TestCase):
                 "feature__first_threshold_voltage_mv": -40.0,
                 "param__static__log_gna_scale": 2.0,
                 "param__static__log_gk_scale": -2.0,
+                "param__static__q10_m": 4.0,
             }
         )
         lower = np.full(len(CELL_PARAMETER_NAMES), -0.5)
         upper = np.full(len(CELL_PARAMETER_NAMES), 0.5)
 
-        seeds = seed_vectors_from_population(
-            pd.DataFrame([row]),
-            _target(),
-            lower,
-            upper,
-            maximum_seeds=1,
-            missing_penalty=CellOptimizationConfig().missing_feature_penalty,
-        )
+        source = pd.DataFrame([row])
+        original = source.copy(deep=True)
+        with pd.option_context("mode.copy_on_write", True):
+            seeds = seed_vectors_from_population(
+                source,
+                _target(),
+                lower,
+                upper,
+                maximum_seeds=1,
+                missing_penalty=CellOptimizationConfig().missing_feature_penalty,
+            )
 
         self.assertEqual(len(seeds), 1)
         np.testing.assert_allclose(seeds[0][-2:], (0.5, -0.5))
+        pd.testing.assert_frame_equal(source, original)
+        expected_shift = np.clip(
+            ((_target().temperature_c - 6.3) / 10.0) * np.log(4.0 / 3.0),
+            -0.5,
+            0.5,
+        )
+        for rate in ("alpha", "beta"):
+            index = PARAMETER_NAMES.index(f"param__{rate}_m__log_rate_scale")
+            self.assertAlmostEqual(seeds[0][index], expected_shift)
 
     def test_dynamic_feature_scales_are_nonzero(self):
         self.assertEqual(feature_scale("spike_count", 1.0), 1.0)

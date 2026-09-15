@@ -677,7 +677,7 @@ def seed_vectors_from_population(
     ranked = candidates.loc[ordered_indices]
     seeds = []
     for _, row in ranked.iterrows():
-        vector = row.loc[list(PARAMETER_NAMES)].to_numpy(dtype=float)
+        vector = row.loc[list(PARAMETER_NAMES)].to_numpy(dtype=float, copy=True)
         temperature_exponent = (target.temperature_c - 6.3) / 10.0
         for gate_name in ("m", "h", "n"):
             source_q10 = float(row.get(f"param__static__q10_{gate_name}", 3.0))
