@@ -51,8 +51,8 @@ end-to-end pipeline yet. Do not treat missing cached files as model failures.
 
 Git excludes NWBs, expression matrices, caches, fitted populations, and figures.
 Obtain source data under the original releases' terms; this repository does
-not relicense those data. A project source-code license has not yet been chosen.
-Do not infer an open-source license from visibility on GitHub.
+not relicense those data. The original alphas_and_betas repository's Apache 2.0
+source-code license is preserved in `LICENSE` together with its Git history.
 
 Before a scientific release, capture input checksums, specimen/donor splits,
 taxonomy versions, environment versions, seeds, and command lines. Archive
