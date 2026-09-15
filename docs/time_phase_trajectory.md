@@ -2,6 +2,8 @@
 
 ## Implemented pilot
 
+Completed results: [time_phase_pilot_results.md](time_phase_pilot_results.md).
+
 Branch: `codex/time-phase-adaptation`. Run from the repository root:
 
 ```bash
